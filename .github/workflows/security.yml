@@ -28,8 +28,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      - name: Enable Docker Content Trust
+        run: echo "DOCKER_CONTENT_TRUST=1" >> $GITHUB_ENV
+
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/discord-notifier:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/discord-notifier:21-alpine3.18 .
 
       - name: Install Dockle
         run: |
@@ -37,4 +40,4 @@ jobs:
           sudo dpkg -i dockle_0.4.14_Linux-64bit.deb
 
       - name: Run Dockle
-        run: dockle --exit-code 1 ${{ secrets.DOCKER_USERNAME }}/discord-notifier:latest
+        run: dockle --exit-code 1 ${{ secrets.DOCKER_USERNAME }}/discord-notifier:21-alpine3.18
