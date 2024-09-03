@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: GitHub Webhook API
+  description: API for handling GitHub webhooks and sending notifications to Discord.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the status of the API.
+      responses:
+        '200':
+          description: API is up and running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'ok'
+                  message:
+                    type: string
+                    example: 'API is up and running'
+                  uptime:
+                    type: number
+                    example: 123.456
+                  timestamp:
+                    type: string
+                    example: '2024-09-03T12:34:56.789Z'
+
+  /webhook:
+    post:
+      summary: Handle GitHub webhook events
+      description: Receives GitHub webhook events and processes them.
+      requestBody:
+        description: GitHub webhook event payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubWebhookBody'
+      responses:
+        '200':
+          description: Webhook processed successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Webhook processed successfully'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    GithubWebhookBody:
+      type: object
+      required:
+        - repository
+        - pusher
+        - sender
+        - ref
+        - commits
+      properties:
+        repository:
+          type: object
+          properties:
+            name:
+              type: string
+              example: 'example-repo'
+            pushed_at:
+              type: string
+              format: date-time
+              example: '2024-09-03T12:34:56Z'
+        pusher:
+          type: object
+          properties:
+            name:
+              type: string
+              example: 'JohnDoe'
+        sender:
+          type: object
+          properties:
+            avatar_url:
+              type: string
+              format: uri
+              example: 'https://avatars.githubusercontent.com/u/1234567?v=4'
+        ref:
+          type: string
+          example: 'refs/heads/main'
+        commits:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Initial commit'
+              author:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: 'JohnDoe'
+        deleted:
+          type: boolean
+          example: false
+        created:
+          type: boolean
+          example: false
