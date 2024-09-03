@@ -8,7 +8,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "lint": "eslint 'src/**/*.ts' --quiet",
     "lint:fix": "eslint 'src/**/*.ts' --quiet --fix",
-    "format": "prettier --write 'src/**/*.{ts,js,json}'"
+    "format": "prettier --write 'src/**/*.{ts,js,json}'",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
